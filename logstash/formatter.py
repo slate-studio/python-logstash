@@ -121,15 +121,13 @@ class LogstashFormatterVersion1(LogstashFormatterBase):
         message = {
             '@timestamp': self.format_timestamp(record.created),
             '@version': '1',
-            'message': record.getMessage(),
+            'msg': record.getMessage(),
             'host': self.host,
             'path': record.pathname,
-            'tags': self.tags,
             'type': self.message_type,
-
-            # Extra Fields
+            'tags': self.tags,
             'level': record.levelname,
-            'logger_name': record.name,
+            'name': record.name,
         }
 
         # Add extra fields
