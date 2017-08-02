@@ -28,7 +28,7 @@ class LogstashFormatterBase(logging.Formatter):
             'funcName', 'id', 'levelname', 'levelno', 'lineno', 'module',
             'msecs', 'msecs', 'message', 'msg', 'name', 'pathname', 'process',
             'processName', 'relativeCreated', 'thread', 'threadName', 'extra',
-            'auth_token', 'password')
+            'auth_token', 'password', 'stack_info')
 
         if sys.version_info < (3, 0):
             easy_types = (basestring, bool, dict, float, int, long, list, type(None))
@@ -119,15 +119,16 @@ class LogstashFormatterVersion1(LogstashFormatterBase):
     def format(self, record):
         # Create message dict
         message = {
-            '@timestamp': self.format_timestamp(record.created),
-            '@version': '1',
-            'msg': record.getMessage(),
-            'host': self.host,
-            'path': record.pathname,
-            'type': self.message_type,
-            'tags': self.tags,
-            'level': record.levelname,
-            'name': record.name,
+            'name':     record.name,
+            'hostname': self.host,
+            'pid':      '',
+            'version':  '',
+            'level':    record.levelno,
+            'msg':      record.getMessage(),
+            'time':     self.format_timestamp(record.created)
+            # 'path': record.pathname,
+            # 'type': self.message_type,
+            # 'tags': self.tags,
         }
 
         # Add extra fields
